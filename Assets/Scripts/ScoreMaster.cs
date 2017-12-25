@@ -25,21 +25,49 @@ public class ScoreMaster {
 
 		int frameTotal = 0;
 		int index = 1;
+		int lastFrameIndex = 0;
 
 		// Loop over every value in rolls and calculate the score for that frame
 		foreach (int roll in rolls) {
 			frameTotal += roll;
 
 			bool gotSpareThisFrame = false;
-			bool gotStrikeLastRoll = false;
+			bool gotSpareLastFrame = false;
+			bool gotStrikeLastFrame = false;
+
+			bool gotStrikeThisFrame = roll == 10;
+			bool endOfFrame = index - lastFrameIndex == 2;
 
 			if (index > 1) {
-				gotSpareThisFrame = roll + rolls [index - 2] != 10;
-				gotStrikeLastRoll = rolls [index - 2] != 10;
+				gotSpareThisFrame = roll + rolls [index - 2] == 10;
+			}
+			if (index > 2){
+				gotSpareLastFrame = rolls[index - 3] + rolls [index - 2] == 10;
+				gotStrikeLastFrame = (rolls [index - 2] == 10) || (rolls [index - 3] == 10) && index - lastFrameIndex == 2;
 			}
 
-			if(index % 2 == 0 && gotStrikeLastRoll && gotSpareThisFrame){
+//			Debug.Log ("Got Spare this Frame: " + gotSpareThisFrame);
+//			Debug.Log ("Got Strike this Frame: " + gotStrikeThisFrame);
+//			Debug.Log ("Got Strike last Frame: " + gotStrikeLastFrame);
+			Debug.Log ("Index " + index + ", Last Frame Index: " + lastFrameIndex);
+
+			if(endOfFrame && !gotStrikeThisFrame && !gotStrikeLastFrame && !gotSpareThisFrame){
+				// Didn't get a strike on the last frame or a spare this frame
 				frameList.Add (frameTotal);
+				//Debug.Log (frameTotal.ToString ());
+
+			} else if ( !endOfFrame && gotSpareLastFrame ) {
+				// Got a Spare on the last frame and now calculating score mid frame
+				frameList.Add (roll + 10);
+				Debug.Log ((roll + 10).ToString ());
+			}
+
+			if (gotStrikeThisFrame) {
+				lastFrameIndex = index;
+				frameTotal = 0;
+
+			} else if (endOfFrame){
+				lastFrameIndex = index;
 				frameTotal = 0;
 			}
 
