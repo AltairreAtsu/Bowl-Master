@@ -49,19 +49,26 @@ public class ScoreMaster {
 //			Debug.Log ("Got Spare this Frame: " + gotSpareThisFrame);
 //			Debug.Log ("Got Strike this Frame: " + gotStrikeThisFrame);
 //			Debug.Log ("Got Strike last Frame: " + gotStrikeLastFrame);
-			Debug.Log ("Index " + index + ", Last Frame Index: " + lastFrameIndex);
+			Debug.Log ("Index " + index + ", Last Frame Index: " + lastFrameIndex + ", Frame Total: " + frameTotal);
 
 			if(endOfFrame && !gotStrikeThisFrame && !gotStrikeLastFrame && !gotSpareThisFrame){
 				// Didn't get a strike on the last frame or a spare this frame
 				frameList.Add (frameTotal);
-				//Debug.Log (frameTotal.ToString ());
 
 			} else if ( !endOfFrame && gotSpareLastFrame ) {
 				// Got a Spare on the last frame and now calculating score mid frame
 				frameList.Add (roll + 10);
-				Debug.Log ((roll + 10).ToString ());
+
+			} else if (endOfFrame && gotStrikeLastFrame) {
+				// Got Strike Last Frame and is end of Frame
+				frameList.Add (10 + frameTotal);
+
+				if (!gotStrikeThisFrame && !gotSpareThisFrame)
+					// Did not get Strike or Spare This Frame 
+					frameList.Add (frameTotal);
 			}
 
+			// General End of Frame Handling
 			if (gotStrikeThisFrame) {
 				lastFrameIndex = index;
 				frameTotal = 0;
