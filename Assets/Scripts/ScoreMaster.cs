@@ -50,7 +50,7 @@ public class ScoreMaster {
 				endOfFrame = false;
 			}
 
-			if (endOfFrame) {
+			if (endOfFrame && !gotStrike && !gotSpare) {
 				int frameScore = roll + rolls [index - 2];
 				frameList.Add (frameScore);
 				Debug.Log ("End Of Frame, Added: " + frameScore);
