@@ -23,9 +23,20 @@ public class ScoreMaster {
 	public static List<int> ScoreFrames (List<int> rolls){
 		List<int> frameList = new List<int> ();
 
+		int frameTotal = 0;
+		int index = 1;
+
 		// Loop over every value in rolls and calculate the score for that frame
 		foreach (int roll in rolls) {
+			frameTotal += roll;
 
+			if(index % 2 == 0){
+				frameList.Add (frameTotal);
+				frameTotal = 0;
+			}
+
+			index++;
+		}
 
 
 		return frameList;
