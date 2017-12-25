@@ -30,7 +30,15 @@ public class ScoreMaster {
 		foreach (int roll in rolls) {
 			frameTotal += roll;
 
-			if(index % 2 == 0){
+			bool gotSpareThisFrame = false;
+			bool gotStrikeLastRoll = false;
+
+			if (index > 1) {
+				gotSpareThisFrame = roll + rolls [index - 2] != 10;
+				gotStrikeLastRoll = rolls [index - 2] != 10;
+			}
+
+			if(index % 2 == 0 && gotStrikeLastRoll && gotSpareThisFrame){
 				frameList.Add (frameTotal);
 				frameTotal = 0;
 			}

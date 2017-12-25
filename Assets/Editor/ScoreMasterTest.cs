@@ -61,27 +61,27 @@ public class ScoreMasterTest {
 		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
 	}
 
-//	[Test]
-//	public void T08Bowl19 () {
-//		int[] rolls = {1, 9};
-//		int[] frames = {};
-//		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
-//	}
-//
-//	[Test]
-//	public void T09Bowl123455 () {
-//		int[] rolls = {1,2, 3,4, 5,5};
-//		int[] frames = { 3,   7};
-//		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
-//	}
-//
-//	[Test]
-//	public void T10SpareBonus () {
-//		int[] rolls = {1,2, 3,5, 5,5, 3,3};
-//		int[] frames = { 3,   8,  13,   6};
-//		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
-//	}
-//
+	[Test]
+	public void T08Bowl19 () {
+		int[] rolls = {1, 9};
+		int[] frames = {};
+		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
+	}
+
+	[Test]
+	public void T09Bowl123455 () {
+		int[] rolls = {1,2, 3,4, 5,5};
+		int[] frames = { 3,   7};
+		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
+	}
+
+	[Test]
+	public void T10SpareBonus () {
+		int[] rolls = {1,2, 3,5, 5,5, 3,3};
+		int[] frames = { 3,   8,  13,   6};
+		Assert.AreEqual (frames.ToList(), ScoreMaster.ScoreFrames (rolls.ToList()));
+	}
+
 //	[Test]
 //	public void T11SpareBonus2 () {
 //		int[] rolls = {1,2, 3,5, 5,5, 3,3, 7,1, 9,1, 6};
