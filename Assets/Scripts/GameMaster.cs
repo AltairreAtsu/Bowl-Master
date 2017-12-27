@@ -6,11 +6,12 @@ public class GameMaster : MonoBehaviour {
 	private Ball ball;
 	private PinCounter pinCounter;
 	private PinSetter pinSetter;
+	private ScoreDisplay scoreDisplay;
 
 	private bool ballOutOfPlay = false;
 
 	// Must be at class level to preserve instance through function calls
-	private List<int> pinFalls;
+	private List<int> rolls;
 
 	// Use this for initialization
 	private void Start () {
@@ -19,7 +20,9 @@ public class GameMaster : MonoBehaviour {
 		pinSetter = GameObject.FindObjectOfType<PinSetter> ();
 		pinCounter = GameObject.FindObjectOfType<PinCounter> ();
 
-		pinFalls = new List<int> (21);
+		scoreDisplay = GameObject.FindObjectOfType<ScoreDisplay> ();
+
+		rolls = new List<int> (21);
 	}
 	
 	// Update is called once per frame
@@ -30,16 +33,16 @@ public class GameMaster : MonoBehaviour {
 	}
 
 	public void UpdateList(int pinFall){
-		pinFalls.Add (pinFall);
+		rolls.Add (pinFall);
 
-		ActionMaster.Action action = ActionMaster.NextAction (pinFalls);
+		ActionMaster.Action action = ActionMaster.NextAction (rolls);
 		Debug.Log ("Action: " + action + ", PinFall: " + pinFall);
 
 		if (action == ActionMaster.Action.Reset)
 			pinCounter.ResetLastStandingCount ();
 
 		if (action == ActionMaster.Action.EndTurnStrike){
-			pinFalls.Add (0);
+			rolls.Add (0);
 			action = ActionMaster.Action.EndTurn;
 		}
 
@@ -55,6 +58,13 @@ public class GameMaster : MonoBehaviour {
 		this.ballOutOfPlay = ballOutOfPlay;
 		if(!ballOutOfPlay){
 			ball.Reset ();
+
+			//try {
+				scoreDisplay.FillRolls (rolls);
+				scoreDisplay.FillFrames (ScoreMaster.ScoreCumulative(rolls));
+			//} catch {
+				//Debug.LogWarning ("Failed to run Fill Roll Card!");
+			//}
 		}
 	}
 

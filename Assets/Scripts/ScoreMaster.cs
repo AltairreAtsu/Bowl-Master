@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreMaster {
-
-	public enum scoreAction {STRIKE_END_TURN, SPARE_END_TURN, DO_NOTHING};
-
+public static class ScoreMaster {
 	// Returns a list of cumulative scores like a score card
 	public static List<int> ScoreCumulative (List<int> rolls) {
 		List<int> cumulativeScores = new List<int> ();
@@ -21,67 +18,26 @@ public class ScoreMaster {
 
 	// Returns a list of individual scores, not cumulative
 	public static List<int> ScoreFrames (List<int> rolls){
-		List<int> frameList = new List<int> ();
+		List<int> frames = new List<int> ();
 
-		int frameTotal = 0;
-		int index = 1;
-		int lastFrameIndex = 0;
+		for (int i = 1; i < rolls.Count; i += 2){
+			if (frames.Count == 10) { break; }
 
-		// Loop over every value in rolls and calculate the score for that frame
-		foreach (int roll in rolls) {
-			frameTotal += roll;
-
-			bool gotSpareThisFrame = false;
-			bool gotSpareLastFrame = false;
-			bool gotStrikeLastFrame = false;
-
-			bool gotStrikeThisFrame = roll == 10;
-			bool endOfFrame = index - lastFrameIndex == 2;
-
-			if (index > 1) {
-				gotSpareThisFrame = roll + rolls [index - 2] == 10;
-			}
-			if (index > 2){
-				gotSpareLastFrame = rolls[index - 3] + rolls [index - 2] == 10;
-				gotStrikeLastFrame = (rolls [index - 2] == 10) || (rolls [index - 3] == 10) && index - lastFrameIndex == 2;
+			// Normal Open Frame
+			if (rolls[i - 1] + rolls[i] < 10) {
+				frames.Add (rolls [i - 1] + rolls [i]);
 			}
 
-//			Debug.Log ("Got Spare this Frame: " + gotSpareThisFrame);
-//			Debug.Log ("Got Strike this Frame: " + gotStrikeThisFrame);
-//			Debug.Log ("Got Strike last Frame: " + gotStrikeLastFrame);
-			Debug.Log ("Index " + index + ", Last Frame Index: " + lastFrameIndex + ", Frame Total: " + frameTotal);
+			if (rolls.Count - i <= 1) { break; } // Not have look ahead
 
-			if(endOfFrame && !gotStrikeThisFrame && !gotStrikeLastFrame && !gotSpareThisFrame){
-				// Didn't get a strike on the last frame or a spare this frame
-				frameList.Add (frameTotal);
-
-			} else if ( !endOfFrame && gotSpareLastFrame ) {
-				// Got a Spare on the last frame and now calculating score mid frame
-				frameList.Add (roll + 10);
-
-			} else if (endOfFrame && gotStrikeLastFrame) {
-				// Got Strike Last Frame and is end of Frame
-				frameList.Add (10 + frameTotal);
-
-				if (!gotStrikeThisFrame && !gotSpareThisFrame)
-					// Did not get Strike or Spare This Frame 
-					frameList.Add (frameTotal);
+			if(rolls[i - 1] == 10){ //Strike
+				i--; // Strike frame has just one ball
+				frames.Add (10 + rolls[i + 1] + rolls[i + 2]);
+			} else if (rolls [i - 1] + rolls [i] == 10) { // Spare
+				frames.Add (10 + rolls [i + 1]);
 			}
-
-			// General End of Frame Handling
-			if (gotStrikeThisFrame) {
-				lastFrameIndex = index;
-				frameTotal = 0;
-
-			} else if (endOfFrame){
-				lastFrameIndex = index;
-				frameTotal = 0;
-			}
-
-			index++;
 		}
 
-
-		return frameList;
+		return frames;
 	}
 }
