@@ -30,8 +30,8 @@ public class ScoreDisplay : MonoBehaviour {
 				output = output.Insert (output.Length, "-");	
 			} else if (rolls[i] == 10){ // Strike
 				output = output.Insert (output.Length, "X");
-				if( output.Length < 19 )
-					output = output.Insert (output.Length, "-");
+//				if( output.Length < 19 )
+//					output = output.Insert (output.Length, "-");
 			} else if ( (i > 0) && !(rolls[i - 1] == 10) && (rolls[i] + rolls[i - 1] == 10) ) { // Spare
 				output = output.Insert (output.Length, "/");
 			} else { // Normal

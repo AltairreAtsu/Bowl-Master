@@ -7,8 +7,8 @@ public class ActionMaster {
 	public enum Action {Tidy, Reset, EndTurn, EndGame, EndTurnStrike};
 
 	public static Action NextAction(List<int> pinFalls){
-		Debug.Log (pinFalls.Count);
 		int pins = pinFalls [pinFalls.Count - 1];
+		Debug.Log (pinFalls [pinFalls.Count - 1]);
 		int bowl = pinFalls.Count;
 
 		if (pins < 0 || pins > 10) {throw new UnityException ("Pins must not be less than 0 or greater than 10!");}

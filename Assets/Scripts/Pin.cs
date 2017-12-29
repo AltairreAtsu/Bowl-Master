@@ -30,11 +30,16 @@ public class Pin : MonoBehaviour {
 	public void Raise(){
 		transform.Translate (new Vector3 (0, distanceToRaise, 0), Space.World);
 		transform.eulerAngles = new Vector3 (270, 0, 0);
+		rigidBody.isKinematic = true;
 		rigidBody.useGravity = false;
 	}
 
 	public void Lower(){
 		transform.Translate (new Vector3 (0, distanceToRaise * -1, 0), Space.World);
 		rigidBody.useGravity = true;
+	}
+
+	public void setKinematicFalse(){
+		rigidBody.isKinematic = false;
 	}
 }

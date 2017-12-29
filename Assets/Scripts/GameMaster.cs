@@ -7,8 +7,10 @@ public class GameMaster : MonoBehaviour {
 	private PinCounter pinCounter;
 	private PinSetter pinSetter;
 	private ScoreDisplay scoreDisplay;
+	private LevelManager levelManager;
 
 	private bool ballOutOfPlay = false;
+
 
 	// Must be at class level to preserve instance through function calls
 	private List<int> rolls;
@@ -21,6 +23,7 @@ public class GameMaster : MonoBehaviour {
 		pinCounter = GameObject.FindObjectOfType<PinCounter> ();
 
 		scoreDisplay = GameObject.FindObjectOfType<ScoreDisplay> ();
+		levelManager = GameObject.FindObjectOfType<LevelManager> ();
 
 		rolls = new List<int> (21);
 	}
@@ -38,7 +41,12 @@ public class GameMaster : MonoBehaviour {
 		ActionMaster.Action action = ActionMaster.NextAction (rolls);
 		Debug.Log ("Action: " + action + ", PinFall: " + pinFall);
 
-		if (action == ActionMaster.Action.Reset)
+		if (action == ActionMaster.Action.EndGame){
+			levelManager.LoadNextLevel ();
+			return;
+		}
+
+		if (action == ActionMaster.Action.Reset || action == ActionMaster.Action.EndTurn)
 			pinCounter.ResetLastStandingCount ();
 
 		if (action == ActionMaster.Action.EndTurnStrike){
@@ -49,8 +57,7 @@ public class GameMaster : MonoBehaviour {
 		pinSetter.DoAction (action);
 	}
 
-	// Getters and Setters
-	public bool GetBallLeftBox(){
+	public bool getBallOutOfPlay(){
 		return ballOutOfPlay;
 	}
 
@@ -58,13 +65,8 @@ public class GameMaster : MonoBehaviour {
 		this.ballOutOfPlay = ballOutOfPlay;
 		if(!ballOutOfPlay){
 			ball.Reset ();
-
-			//try {
-				scoreDisplay.FillRolls (rolls);
-				scoreDisplay.FillFrames (ScoreMaster.ScoreCumulative(rolls));
-			//} catch {
-				//Debug.LogWarning ("Failed to run Fill Roll Card!");
-			//}
+			scoreDisplay.FillRolls (rolls);
+			scoreDisplay.FillFrames (ScoreMaster.ScoreCumulative(rolls));
 		}
 	}
 

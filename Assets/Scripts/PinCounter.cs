@@ -20,9 +20,16 @@ public class PinCounter : MonoBehaviour {
 		pinUI = GameObject.Find ("Pin Count").GetComponent<Text>();
 	}
 
+	private void Update(){
+		if(gameMaster.getBallOutOfPlay())
+			foreach(GameObject pin in GameObject.FindGameObjectsWithTag ("Pin")){
+				pin.GetComponent<Rigidbody> ().isKinematic = false;
+			}
+	}
+
 	public void UpdatingStandingCountAndSettle(){
-		// Update Last Standing Count
-		// Call PinsHaveSettled
+		// Ball Bowled, Count Pins and detect settle
+
 		int standingPins = CountStanding();
 		UpdatePinDisplay (standingPins);
 
@@ -32,7 +39,7 @@ public class PinCounter : MonoBehaviour {
 		}
 
 		if(lastStandingCount == standingPins && Time.time - lastChangeTime >= settleTime){
-			PinsHaveSettled ();
+			PinsHaveSettled (standingPins);
 
 		} else if(lastStandingCount != standingPins){
 			lastStandingCount = standingPins;
@@ -41,6 +48,7 @@ public class PinCounter : MonoBehaviour {
 	}
 
 	public int CountStanding(){
+		// Count All Standing Pins
 		int standing = 0;
 		foreach (GameObject pin in GameObject.FindGameObjectsWithTag ("Pin")){
 			if (pin.GetComponent<Pin>().IsStanding())
@@ -50,11 +58,11 @@ public class PinCounter : MonoBehaviour {
 		return standing;
 	}
 
-	private void PinsHaveSettled(){
-		int standing = CountStanding ();
-		int pinFall = lastSettledCount - standing;
-		lastSettledCount = standing;
+	private void PinsHaveSettled(int standingPins){
+		// When pins have settled Reset and update Game Master
+		int pinFall = lastSettledCount - standingPins;
 		pinUI.color = Color.green;
+		lastSettledCount = standingPins;
 
 		gameMaster.UpdateList(pinFall);
 
@@ -71,7 +79,7 @@ public class PinCounter : MonoBehaviour {
 		pinUI.color = Color.red;
 	}
 
-	void OnTriggerExit (Collider coll) {
+	private void OnTriggerExit (Collider coll) {
 		if(coll.gameObject.tag == "Player"){
 			gameMaster.SetBallOutOfPlay (true);
 		}
